@@ -1,0 +1,23 @@
+{
+  "name": "lane-board",
+  "owner": {
+    "name": "Andy Vu Viet"
+  },
+  "description": "Orchestrator + lane rules for Claude Code, built on mattpocock-skills.",
+  "allowCrossMarketplaceDependenciesOn": [
+    "claude-plugins-official"
+  ],
+  "plugins": [
+    {
+      "name": "lane-board",
+      "source": "./",
+      "description": "Run a project as one Orchestrator session plus child lane sessions, one ticket each, on top of Matt Pocock's skills.",
+      "category": "productivity",
+      "keywords": [
+        "orchestration",
+        "lanes",
+        "wayfinder"
+      ]
+    }
+  ]
+}

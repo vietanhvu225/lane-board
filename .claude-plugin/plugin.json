@@ -1,0 +1,26 @@
+{
+  "name": "lane-board",
+  "version": "0.1.0",
+  "description": "Run a project as one Orchestrator session plus child lane sessions, one ticket each, on top of Matt Pocock's skills. /board-init sets up the rules, templates and a ticket checker in a repo.",
+  "author": {
+    "name": "Andy Vu Viet"
+  },
+  "license": "MIT",
+  "keywords": [
+    "orchestration",
+    "multi-session",
+    "lanes",
+    "wayfinder",
+    "tickets",
+    "claude-desktop"
+  ],
+  "skills": [
+    "./skills/board-init"
+  ],
+  "dependencies": [
+    {
+      "name": "mattpocock-skills",
+      "marketplace": "claude-plugins-official"
+    }
+  ]
+}
