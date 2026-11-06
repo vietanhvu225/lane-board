@@ -27,7 +27,7 @@ Built for the Claude Desktop app (Code tab), where a session can start child ses
 Requires Claude Code with plugin support, Python 3.8+, git, and the `mattpocock-skills` plugin (installed with lane-board as a dependency).
 
 ```bash
-claude plugin marketplace add <path or URL of this repo>
+claude plugin marketplace add vietanhvu225/lane-board
 claude plugin install lane-board@lane-board
 ```
 

@@ -5,6 +5,8 @@
   "author": {
     "name": "Andy Vu Viet"
   },
+  "homepage": "https://github.com/vietanhvu225/lane-board",
+  "repository": "https://github.com/vietanhvu225/lane-board",
   "license": "MIT",
   "keywords": [
     "orchestration",
