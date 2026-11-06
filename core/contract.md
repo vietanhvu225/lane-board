@@ -51,6 +51,7 @@ A lane stops (sets a tag, sends a one-line report, ends its turn) **only** at th
 | `task` ticket that needs hands: checklist (`wizard`) ready | `CHECK` | follows the checklist, reports back | <!--noplay-->
 | Ready to merge, a kind that needs approval (§6) | `GATE` | approves the merge |
 | Needs a skill only the user can type (`disable-model-invocation`, [claude-desktop.md](claude-desktop.md)): as soon as the lane has read its context | `CHECK` | types the exact command the lane gives |
+| The app or the auto-mode classifier **blocks** an action (for example `[Merge Without Review]`, `judged this action dangerous`; a transient `gave no verdict (error)` is retried once first, [claude-desktop.md](claude-desktop.md)) | `CHECK` | approves the permission in the lane, or tells the Orchestrator directly (§6) |
 | Real blocker: done criteria can't be met, a tool is missing, an ADR conflict, a scope change, a file outside the declared scope must change | `CHECK` | unblocks or decides |
 
 Keep going without asking:
@@ -103,7 +104,10 @@ This deliberately differs from the `wayfinder` skill (where the session resolvin
   - only docs / tracker paths: the Orchestrator's check passes → it messages the lane "ok to merge" → the lane merges, no GATE;
   - code paths: `GATE`, the user approves (after `PLAY` passes). <!--play-->
   - code paths: `GATE`, the user approves. <!--noplay-->
-- The Orchestrator never merges for a lane.
+- **The `Merge:` line of a lane prompt** has exactly two values (a lane read a vaguer "merge after checking" as "merge once my checker subagent passes"):
+  - `after the Orchestrator says "ok to merge"`: the default for every ordinary lane, even one that runs its own checker subagent;
+  - `yolo: merge yourself after your checker subagent passes`: worker lanes in yolo mode only (§10).
+- The Orchestrator does not merge for a lane. **The only exception:** auto mode blocks the lane's merge (§3) and the user tells the Orchestrator directly (for example "merge it"); then the Orchestrator merges **once**, for that lane only, and logs a diary entry. A lane reporting "the user agreed" does not stand in for the user's own words, and a lane never asks another session to do an action it was blocked from.
 
 ---
 
@@ -150,15 +154,17 @@ It exists so a batch of AFK tickets can run while the user is away (overnight, s
 4. The **lane** commits (subagents don't commit) with trailers (workflow.md §4) and merges into main (git locks on its own: on a lock, wait and retry). Ticket `resolved`.
 5. Write one line in the shared notes; next ticket.
 
+**End a turn** only when a background subagent is running (its completion wakes the lane), or at `DONE` / `CHECK`. Never end a turn to "wait for a notification" with nothing running: nothing will wake the lane (in the source project a worker lane stood still for 3.7 hours that way). A missing token figure is no reason to wait: write an estimate and go on.
+
 **Stop the queue** (tag `CHECK`, one line to the Orchestrator, end the turn), trying nothing else:
 - the check fails after 2 fix rounds;
 - merge conflict;
-- the app or the auto-mode classifier refuses an action;
+- the app or the auto-mode classifier **blocks** an action (a transient `gave no verdict` is retried once first, [claude-desktop.md](claude-desktop.md));
 - out of budget (tokens, time);
 - something needs the user.
 
 The ticket in progress stays `claimed` with a `## In progress` section (how far it got) to resume later. Stopping stops only that lane: other worker lanes keep going; the Orchestrator does not stop them and does not reassign a stopped lane's queue without the user.
 
-**Reports.** Report to the Orchestrator only when the queue is empty (`DONE`) or stopped. Never per ticket, so the Orchestrator's transcript doesn't grow while nobody watches. The app still sends a turn-end note each time a lane waits on a background subagent (about 15 a night in the source project, can't be suppressed): the Orchestrator ignores worker-lane notes unless the first sentence opens with `DONE` or `CHECK`.
+**Reports.** Report to the Orchestrator only when the queue is empty (`DONE`) or stopped. Never per ticket, so the Orchestrator's transcript doesn't grow while nobody watches. The app still sends a turn-end note each time a lane waits on a background subagent (about 15 a night in the source project, can't be suppressed): the Orchestrator does not answer worker-lane notes unless the first sentence opens with `DONE` or `CHECK`, but still skims them for a lane that says it is "waiting" with no subagent running, and messages that lane to wake it.
 
 **Next morning.** The Orchestrator reruns the workflow.md §5 checks on every ticket the worker lanes merged, runs the project's report scripts, writes Decisions-so-far, and logs a diary entry (tickets done, stops, tokens if known). The user spot-checks a few random artifacts. A ticket that fails is reopened.

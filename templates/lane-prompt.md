@@ -10,7 +10,7 @@ Type: <research | grilling | prototype | task | implement>
 Initial title: <effort>-<NN> <short name>
 Orchestrator id: <local_… id>
 Scope: see the `Scope:` line in the ticket header (changing a file outside it → CHECK, or record it under `Process deviations`)
-Merge: <after the Orchestrator says "ok to merge" | needs GATE>. A checker subagent of your own passing is not "ok to merge".
+Merge: <after the Orchestrator says "ok to merge" | yolo: merge yourself after your checker subagent passes> <+ needs GATE for code paths>. Outside yolo mode, a checker subagent of your own passing is not "ok to merge".
 
 Read first, in order:
 1. CLAUDE.md

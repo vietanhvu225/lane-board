@@ -47,7 +47,7 @@ Each level reuses the one below; none replaces it.
    > You are {{PROJECT}} Orchestrator. Read docs/orchestration/orchestrator.md and follow it.
 4. **Day to day.** The Orchestrator proposes lanes, you click to start them. When a lane shows `CHECK` / `GATE` / `PLAY`, go into that lane. End of a phase: `/mattpocock-skills:retro`, carry the result to the CTO. <!--play-->
 4. **Day to day.** The Orchestrator proposes lanes, you click to start them. When a lane shows `CHECK` / `GATE`, go into that lane. End of a phase: `/mattpocock-skills:retro`, carry the result to the CTO. <!--noplay-->
-5. **Long transcripts.** The Orchestrator hands over by itself (orchestrator.md §Handover). For the CTO, open a new CTO session:
+5. **Long transcripts.** The Orchestrator hands over by itself when a phase closes or after its first compaction (orchestrator.md §Handover). For the CTO, open a new CTO session:
    > You are the CTO of {{PROJECT}}. Read CLAUDE.md, docs/adr/ and docs/orchestration/board-diary.md for context.
 
    or run `/mattpocock-skills:handoff` in the old CTO session.

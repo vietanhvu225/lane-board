@@ -29,4 +29,12 @@ Each rule below changed because something went wrong (or right) in the project t
 | Checks listed by path touched | A project added a build step that every code-touching lane had to run before merge | contract §6, workflow §5 |
 | Criteria planned for data without lines | "Cite file:line" could not be met for binary data, found only after the batch | workflow §5 |
 | Compare reruns with `--check` / `git diff`, not hashes | `core.autocrlf=true` changed line endings on the main checkout | workflow §5 |
+| Auto-mode block → `CHECK`; the one case the Orchestrator merges | The classifier blocked lane merges three times; once a lane relayed "the user agreed" and asked another session to merge for it | contract §3, §6 |
+| Transient classifier error retried once | `gave no verdict (error)` came twice and passed on retry | claude-desktop.md |
+| `Merge:` has two values only | "Merge after checking" was read as "merge once my checker subagent passes" | contract §6, lane prompt |
+| Worker lanes end a turn only with a subagent running | A worker lane ended its turn to wait for a token figure and stood still 3.7 hours; nothing woke it | contract §10, lane.md |
+| Wake a quiet lane after 30 minutes | Same incident: the Orchestrator skipped the lane's notes and nobody noticed | orchestrator.md |
+| `Done when` reachable inside the lane's scope | Lanes were asked to pass an aggregate report that only the Orchestrator rebuilds after merge; one ticket's artifacts sat in a folder a script excluded | orchestrator.md |
+| Hand over at phase close or first compaction | A second Orchestrator was woken 151 times in about a day of yolo mode | orchestrator.md |
+| Real factor on token estimates | Real use ran about 2× the per-ticket estimates | orchestrator.md, claude-desktop.md |
 | Handover with "Open lanes" and ids | The first Orchestrator handover worked end to end: the new Orchestrator checked in with the CTO by id | orchestrator.md, templates/handover.md |

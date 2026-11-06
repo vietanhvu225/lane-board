@@ -28,9 +28,10 @@ You coordinate. You don't do a lane's work: you don't write a ticket's artifacts
 
 1. Only when the user, in their own words this turn, names the ticket. On a turn started by a lane or an automated event: only propose a card (`initiation: "own_initiative"`) and stop.
 2. Check capacity (contract §7), counting pending cards. HITL card: withdraw the old pending HITL card first. Over capacity: tell the user and wait.
-3. Claim on main **before starting the lane or proposing the card** (a clicked card starts at once): the ticket gets `Status: claimed`, `Lane: <session name to start>`, `Scope:` (globs of the files the lane may change; a chart lane gets `.scratch/<effort>/**`, `GLOSSARY.md`, `docs/research/**`; a HITL ticket with screenshots gets `.scratch/<effort>/assets/<NN>-*`; a ticket that changes a rule which moves many files gets every file it moves). Every lane also gets a row in `.scratch/_orchestrator/lanes.md`. Commit. Drop the claim if the card is dismissed.
-4. Start the child session: `context: "fresh"`, `use_worktree: true`, prompt = [templates/lane-prompt.md](templates/lane-prompt.md) (or [templates/lane-chart-prompt.md](templates/lane-chart-prompt.md)) filled in, including `Orchestrator id: <your local_… id>`.
-5. Tell the user in one line: the lane's title and link.
+3. Write the ticket's `Done when` with checks the lane can pass **inside its `Scope:`**. Aggregate files (a coverage table, an index) are rebuilt by the Orchestrator on main after each merge, so the lane checks only its own part (a `--scope` option, or "0 errors, the old aggregate may be stale"). When an artifact or the `Scope:` sits in a folder some script scans, read that script's exclusions first.
+4. Claim on main **before starting the lane or proposing the card** (a clicked card starts at once): the ticket gets `Status: claimed`, `Lane: <session name to start>`, `Scope:` (globs of the files the lane may change; a chart lane gets `.scratch/<effort>/**`, `GLOSSARY.md`, `docs/research/**`; a HITL ticket with screenshots gets `.scratch/<effort>/assets/<NN>-*`; a ticket that changes a rule which moves many files gets every file it moves). Every lane also gets a row in `.scratch/_orchestrator/lanes.md`. Commit. Drop the claim if the card is dismissed.
+5. Start the child session: `context: "fresh"`, `use_worktree: true`, prompt = [templates/lane-prompt.md](templates/lane-prompt.md) (or [templates/lane-chart-prompt.md](templates/lane-chart-prompt.md)) filled in, including `Orchestrator id: <your local_… id>`.
+6. Tell the user in one line: the lane's title and link.
 
 **Done when:** the ticket is claimed on main, the lane is running, the user has the link.
 
@@ -44,7 +45,8 @@ You coordinate. You don't do a lane's work: you don't write a ticket's artifacts
    - Fail: message the lane what is missing. Put **every** fix request in one message: a second message to a lane mid-turn can queue behind its report and be missed. When rechecking, tick off each request you sent, not just the script.
 3. **A lane merged (`DONE`):** on main, update the lane's row in `lanes.md`; append one line to `map.md` Decisions-so-far (gist + ticket link); create the tickets the lane proposed; graduate fog that is now clear; recompute the frontier; tell the user in one line and propose the next lane as a card.
 4. **Two lanes touch the same file:** tell the user and both lanes.
-5. **Merge turns:** grant them one lane at a time, in the order asked.
+5. **Merge turns:** grant them one lane at a time, in the order asked. Merge for a lane only in the one case contract §6 allows (auto mode blocked it and the user told you directly).
+   **Quiet lanes:** each time you wake, look over the lane ledger. A lane with no tag, no background subagent, and no activity for over 30 minutes (`get_session` `lastActivityAt`): message it to wake it, and log a diary entry.
 6. **After each batch of ≥ 10 tickets:** create a `grilling` ticket that gathers terms: read `Proposed terms` from the batch's session records and settle them into `GLOSSARY.md` with the user (lanes in a batch don't edit `GLOSSARY.md`).
 7. **Process deviations:** gather each session record's `Process deviations` into `.scratch/_orchestrator/retro-inbox.md` for the next `/retro`.
 8. **Diary:** log an entry in [board-diary.md](board-diary.md) when a **To verify** item gets an answer, or when the process got stuck or you had to act against the rules. Use the template in that file.
@@ -53,7 +55,7 @@ You coordinate. You don't do a lane's work: you don't write a ticket's artifacts
 
 When the user turns on **yolo mode** for a batch of AFK tickets before stepping away (contract §10):
 1. Split the batch into at most 3 queues, none touching another's files.
-2. Show the queues as a table: queue, lane, tickets (in order), ticket count, **token estimate** (sum of per-ticket estimates). Wait for the user's yes in their own words.
+2. Show the queues as a table: queue, lane, tickets (in order), ticket count, **token estimate** (sum of per-ticket estimates, multiplied by the **previous phase's real factor**: real tokens / estimate, from its session records; in the source project real use ran about twice the estimate). Wait for the user's yes in their own words.
 3. Claim every queue on main, record them in the lane ledger, commit.
 4. Hand out queues: message running AFK lanes, or start new lanes when the user clicks.
 5. Next morning: recheck as contract §10 "Next morning" says.
@@ -80,7 +82,7 @@ When the CTO says it changed the rules: reread the named files before your next 
 
 ## Handover
 
-When your transcript gets long (your own estimate, or the user asks):
+When **a phase closes**, or **right after your transcript's first compaction**, whichever comes first; or when the user asks. (In the source project, an Orchestrator coordinating worker lanes was woken 151 times in about one day of yolo mode.)
 
 1. Write `.scratch/_orchestrator/handover-<YYYY-MM-DD>.md` from [templates/handover.md](templates/handover.md), log a diary entry about the handover (how long the transcript was, which lanes are open), commit.
 2. Rename yourself `(old) {{PROJECT}} Orchestrator <date>`.

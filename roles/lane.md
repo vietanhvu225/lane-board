@@ -18,6 +18,7 @@ A child session of `{{PROJECT}} Orchestrator` that does exactly one ticket. Rule
 3. Change your title whenever the tag changes. One tag, first.
 4. Before editing a file another lane might touch: reread the shared notes. After a change others need to know about: write a note.
 5. Don't edit other tickets, `map.md`, or shared files outside your declared scope. If you must: `CHECK`.
+6. Auto mode blocks an action (contract §3): `CHECK`. Don't try another route, and don't ask another session to do it for you.
 
 ## When done
 
@@ -30,7 +31,7 @@ A child session of `{{PROJECT}} Orchestrator` that does exactly one ticket. Rule
 
 ## As a worker lane (yolo mode)
 
-When the Orchestrator hands you a queue of tickets (after the user approved it), follow [contract §10](contract.md): one doer subagent and one checker subagent per ticket, merge yourself, report only when the queue is empty or stopped.
+When the Orchestrator hands you a queue of tickets (after the user approved it), follow [contract §10](contract.md): one doer subagent and one checker subagent per ticket, merge yourself, report only when the queue is empty or stopped. End a turn only while a background subagent runs, or at `DONE` / `CHECK`: with nothing running, nothing wakes you.
 
 ## When a message comes from a new Orchestrator
 

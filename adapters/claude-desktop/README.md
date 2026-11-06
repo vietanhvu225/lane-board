@@ -22,6 +22,12 @@ The app changes. When your project sees something different, log a `[general] [O
 - Branch names: a lane started by `start_session` gets `claude/<slug>-<suffix>`; a lane started from a card gets a random name, and `branch_name` is dropped. **Observed.** Set no branch convention; record the real branch in the lane ledger.
 - A lane can't be moved to a new parent. Lanes that live for days stay under the old Orchestrator; the new one messages them by id. **Assumed.**
 
+## Auto-mode classifier
+
+- The classifier gives three kinds of answer. **Observed.**
+  - `[Merge Without Review]` and `judged this action dangerous` are **real blocks**: the lane stops with `CHECK` (contract §3).
+  - `gave no verdict (error)` is a **transient error**; the message itself says a later response may get a verdict. Wait, retry once; if it fails again, treat it as a block.
+
 ## User-only skills
 
 - A lane prompt that starts with a slash command does **not** run a skill marked `disable-model-invocation: true` (`/mattpocock-skills:wayfinder`, `to-spec`, `to-tickets`, `implement`, `retro`, `handoff`, `setup-matt-pocock-skills`, …). **Observed.** The user must type the command inside the lane; the lane stops with `CHECK` and gives the exact command (contract §3).
@@ -41,8 +47,9 @@ The app changes. When your project sees something different, log a `[general] [O
 ## Turn-end notes
 
 - When a child ends a turn, the parent gets a note with the first 400 characters of the child's report, and the app wakes the parent if it is idle. **Observed.** So a lane's report opens with `<title> — <what it needs>`.
-- A lane waiting on background subagents ends its turn many times, and each one sends a note (about 15 a night for one worker lane). It can't be suppressed. **Observed.** The Orchestrator ignores worker-lane notes unless they open with `DONE` or `CHECK` (contract §10).
-- Every lane turn wakes the Orchestrator, so its transcript grows fast with 3 lanes. **Assumed.** Hand over when it gets long.
+- A lane waiting on background subagents ends its turn many times, and each one sends a note (about 15 a night for one worker lane). It can't be suppressed. **Observed.** The Orchestrator does not answer worker-lane notes unless they open with `DONE` or `CHECK` (contract §10).
+- A lane that ends its turn with no background subagent running is woken by nothing: it stays idle until someone messages it. **Observed** (a worker lane ended its turn "waiting" for a figure that had already arrived, and stood still for 3.7 hours). Hence the end-turn rule (contract §10) and the Orchestrator's 30-minute wake-up (orchestrator.md).
+- Every lane turn wakes the Orchestrator, so its transcript grows fast. **Observed**: with worker lanes running overnight, one Orchestrator was woken 151 times in about a day. Hand over when a phase closes or after the first compaction (orchestrator.md §Handover).
 
 ## Shared notes folder
 
@@ -58,7 +65,8 @@ The app changes. When your project sees something different, log a `[general] [O
 
 ## Subagent tokens
 
-- A background subagent's completion notification carries a `subagent_tokens` figure. **Observed** (06/11/2026, outside the source project). Use it for the session record's `Tokens:` field; whether a foreground Agent call reports it too is **To verify**.
+- A background subagent's completion notification carries a `subagent_tokens` figure. **Observed** (06/11/2026, worker lanes of the source project). Use it for the session record's `Tokens:` field; whether a foreground Agent call reports it too is **To verify**.
+- Real token use against the per-ticket estimates ran about 2× in the source project's second phase. **Observed.** Hence the real factor in batch estimates (orchestrator.md §Yolo mode).
 
 ## Git worktrees
 
