@@ -5,14 +5,14 @@ A chart lane opens a new effort that has no tickets yet. The user works with it 
 The lane is claimed only in the lane ledger (`.scratch/_orchestrator/lanes.md`), since it has no ticket to claim.
 
 ```markdown
-You are the chart lane of "{{PROJECT}} Orchestrator" for effort <effort>.
+You are the chart lane of "<Orchestrator title>" for effort <effort>.
 Initial title: <effort>-00 chart
 Orchestrator id: <local_… id>
 Scope: `.scratch/<effort>/**`, `GLOSSARY.md`, `docs/research/**`
 
-Read first: CLAUDE.md, docs/orchestration/lane.md, docs/orchestration/contract.md, docs/orchestration/phases.md §<effort>.
+Read first: CLAUDE.md, docs/orchestration/lane.md, docs/orchestration/contract.md, <your area's brief: docs/orchestration/phases.md §<effort> | the area brief named in orchestrator.md>.
 
-Job: build the wayfinder map in .scratch/<effort>/ (map.md + issues/), using the draft tickets in <phases.md §<effort> | draft file> as input. The wayfinder skill can only be typed by the user: once you have read the context, set the CHECK tag at once, send the Orchestrator one line, and give the user the exact command to type in this lane:
+Job: build the wayfinder map in .scratch/<effort>/ (map.md + issues/), using the draft tickets in <the brief's section for <effort> | draft file> as input. The wayfinder skill can only be typed by the user: once you have read the context, set the CHECK tag at once, send the Orchestrator one line, and give the user the exact command to type in this lane:
   /mattpocock-skills:wayfinder <effort>: use <input> as the draft tickets
 
 Create .scratch/<effort>/issues/00-chart.md for this lane itself (header per docs/agents/ticket-header.md) to hold its session record.

@@ -65,7 +65,7 @@ Keep going without asking:
 
 - A lane sends `DONE`, `CHECK`, `GATE`, `PLAY` to the Orchestrator in one line: the lane's title + what it needs. <!--play-->
 - A lane sends `DONE`, `CHECK`, `GATE` to the Orchestrator in one line: the lane's title + what it needs. <!--noplay-->
-- **Send by `local_…` id by default.** Sending by title failed several times in the source project (lane → Orchestrator, Orchestrator → CTO), probably after a session process restarted; sending by id always arrived. A lane takes the Orchestrator's id from the `Orchestrator id:` line of its prompt; the Orchestrator takes the CTO's id from the handover. If the id fails, try the title, then log it in the diary.
+- **Send by `local_…` id by default.** Sending by title failed several times in the source project (lane → Orchestrator, Orchestrator → CTO), probably after a session process restarted; sending by id always arrived. A lane takes the Orchestrator's id from the `Orchestrator id:` line of its prompt; the Orchestrator takes the CTO's id from the handover. If the id fails, use the `from` of the Orchestrator's latest message, or its area's id line at the top of `.scratch/_orchestrator/lanes.md` on main (§11), then the title; log it in the diary.
 - Titles still matter: the user reads the sidebar, and a title finds the current Orchestrator when no id is known. On handover, the new Orchestrator messages each open lane its new id (orchestrator.md §Handover).
 - When a lane ends a turn, the Orchestrator receives the first 400 characters of its report. So the first sentence of a lane's end-of-turn report is always `<title> — <what it needs / what it finished>`.
 - Orchestrator ↔ CTO: two top-level sessions, messaging only for a few things (orchestrator.md §Talking to the CTO). The receiver sees the sender's `from-name` and `local_…` id.
@@ -113,10 +113,11 @@ This deliberately differs from the `wayfinder` skill (where the session resolvin
 
 ## 7. Capacity
 
-- At most **3 lanes** at once (RAM, and every lane turn wakes the Orchestrator, so its transcript grows fast).
-- At most **1 HITL lane** at once (grilling, prototype, PLAY). <!--play-->
-- At most **1 HITL lane** at once (grilling, prototype, hands-on task). <!--noplay-->
-- A pending HITL card counts as granted: only **1 HITL card** may be pending at a time; when proposing a new one, withdraw the old one (`dismiss_task`). In the source project the user clicked two pending HITL cards and got two HITL lanes.
+- At most **3 lanes** at once, **counted across all Orchestrators** (§11; the shared lane ledger shows the total). RAM is the limit, and every lane turn wakes its Orchestrator, so the transcript grows fast.
+- If the project has an **exclusive resource** (one GPU, an app that accepts a single client, a tool bound to one worktree): at most **1 lane** uses it at a time, counted across all Orchestrators; the others queue. Name the resource and how a lane takes it in README §Operating decisions.
+- At most **1 HITL lane** at once **per Orchestrator** (grilling, prototype, PLAY). <!--play-->
+- At most **1 HITL lane** at once **per Orchestrator** (grilling, prototype, hands-on task). <!--noplay-->
+- A pending HITL card counts as granted: each Orchestrator may have only **1 HITL card** pending at a time; when proposing a new one, withdraw the old one (`dismiss_task`). In the source project the user clicked two pending HITL cards and got two HITL lanes.
 - Lanes that declare the same files or area never run at the same time.
 
 ---
@@ -168,3 +169,30 @@ The ticket in progress stays `claimed` with a `## In progress` section (how far 
 **Reports.** Report to the Orchestrator only when the queue is empty (`DONE`) or stopped. Never per ticket, so the Orchestrator's transcript doesn't grow while nobody watches. The app still sends a turn-end note each time a lane waits on a background subagent (about 15 a night in the source project, can't be suppressed): the Orchestrator does not answer worker-lane notes unless the first sentence opens with `DONE` or `CHECK`, but still skims them for a lane that says it is "waiting" with no subagent running, and messages that lane to wake it.
 
 **Next morning.** The Orchestrator reruns the workflow.md §5 checks on every ticket the worker lanes merged, runs the project's report scripts, writes Decisions-so-far, and logs a diary entry (tickets done, stops, tokens if known). The user spot-checks a few random artifacts. A ticket that fails is reopened.
+
+---
+
+## 11. Several Orchestrators by area
+
+Optional. A project may run more than one Orchestrator, each owning one **area** (for example gameplay and art). Start with one. Add an area only when the work splits cleanly by files and efforts, and record the split in an ADR (which files each area owns, which files are shared).
+
+Every Orchestrator uses the same contract, orchestrator.md, lane.md and workflow.md. Each area has its own:
+
+| | Recorded in |
+|---|---|
+| Orchestrator title, e.g. `{{PROJECT}} Art Orchestrator` | orchestrator.md area table, README §Roles |
+| Brief, its roadmap in place of `phases.md` | orchestrator.md area table |
+| Effort range, e.g. `p70`–`p79` | the area's brief |
+| Folder for its handover, retro inbox and queue files, e.g. `.scratch/_art/` | orchestrator.md area table |
+| Id line at the top of the lane ledger | `.scratch/_orchestrator/lanes.md` |
+
+**Shared:**
+- The **lane ledger** `.scratch/_orchestrator/lanes.md`: every Orchestrator writes its lanes here, so the ledger shows the total. The effort range tells which area a lane belongs to.
+- **Capacity** (§7): the lane cap and the exclusive-resource cap count across all Orchestrators; the HITL cap counts per Orchestrator. Before starting a lane, read the ledger and count the other area's lanes too.
+- **Usage limits** of the account: when planning a batch, each Orchestrator writes the share it means to use in its area's plan.
+
+**Boundaries:**
+- Each area changes only its own files. For a shared file, the Orchestrator **messages the other Orchestrator before claiming**, puts the file in the ticket's `Scope:`, and waits for the answer. No answer by the other's next turn: tell the user.
+- No Orchestrator claims, starts a lane for, or edits a ticket of an effort that belongs to another area.
+
+**Contact.** Orchestrators message each other by id (from the ledger's id lines), only about shared files, an exclusive resource held too long, or work moving between areas. Each one still checks in with the CTO and messages it per orchestrator.md §Talking to the CTO.

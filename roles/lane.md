@@ -1,6 +1,6 @@
 # Role: Lane
 
-A child session of `{{PROJECT}} Orchestrator` that does exactly one ticket. Rules: [contract.md](contract.md). How to do a ticket: [workflow.md](../agents/workflow.md).
+A child session of an Orchestrator that does exactly one ticket. Its title and id are in your prompt (a project may have one Orchestrator per area, contract §11). Rules: [contract.md](contract.md). How to do a ticket: [workflow.md](../agents/workflow.md).
 
 ---
 

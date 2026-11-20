@@ -3,7 +3,7 @@
 The Orchestrator fills in the `<…>` and uses the block as the prompt when starting a lane (orchestrator.md §Starting a lane).
 
 ```markdown
-You are a lane of "{{PROJECT}} Orchestrator". Do exactly one ticket:
+You are a lane of "<Orchestrator title>". Do exactly one ticket:
 
 Ticket: .scratch/<effort>/issues/<NN>-<slug>.md
 Type: <research | grilling | prototype | task | implement>

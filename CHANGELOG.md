@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.0 (2026-11-21)
+
+- Several Orchestrators by area (contract §11, optional): each area has its own title, brief, effort range, folder and id line in the lane ledger; the ledger is shared; a shared file needs the other Orchestrator's word before a claim; no Orchestrator touches another area's efforts.
+- Capacity (contract §7): the lane cap and the new exclusive-resource cap (one GPU, a single-client app) count across all Orchestrators; the HITL cap counts per Orchestrator.
+- orchestrator.md speaks of `<title>`, `<brief>`, `<folder>` from an area table; the lane prompts name `<Orchestrator title>`; the chart lane reads its area's brief; the handover template lists the other area's Orchestrator; the lane ledger template has the Orchestrator's id line.
+- Sending: when the Orchestrator's id fails, fall back to its latest message's `from`, then its id line in the lane ledger, then the title (contract §4).
+
 ## 0.2.0 (2026-11-07)
 
 From the source project's second retro:

@@ -37,4 +37,6 @@ Each rule below changed because something went wrong (or right) in the project t
 | `Done when` reachable inside the lane's scope | Lanes were asked to pass an aggregate report that only the Orchestrator rebuilds after merge; one ticket's artifacts sat in a folder a script excluded | orchestrator.md |
 | Hand over at phase close or first compaction | A second Orchestrator was woken 151 times in about a day of yolo mode | orchestrator.md |
 | Real factor on token estimates | Real use ran about 2× the per-ticket estimates | orchestrator.md, claude-desktop.md |
+| Several Orchestrators by area, shared lane ledger | The source project added an art Orchestrator beside the gameplay one; one ledger keeps the lane count right across both, and a shared file needs the other Orchestrator's word before a claim. Not run long yet | contract §7, §11, orchestrator.md |
+| One lane at a time on an exclusive resource | The game client accepted only one console client, and the GPU could not hold the game and an image tool at once | contract §7 |
 | Handover with "Open lanes" and ids | The first Orchestrator handover worked end to end: the new Orchestrator checked in with the CTO by id | orchestrator.md, templates/handover.md |

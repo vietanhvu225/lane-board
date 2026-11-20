@@ -62,6 +62,7 @@ The app changes. When your project sees something different, log a `[general] [O
 - The CTO and the Orchestrator as two top-level peers, talking by id: works, including a full Orchestrator handover (old one writes the handover with the CTO's id, renames itself `(old) …`; the new one checks in with the CTO by id and gives its own id). **Observed.**
 - Three levels (CTO starts the Orchestrator, which starts lanes as grandchildren): how the app handles it is **To verify**. Avoid it: keep the CTO and the Orchestrator top-level.
 - Old lanes (children of a previous Orchestrator) sending to the new Orchestrator by id, and the old Orchestrator forwarding their turn-end notes: **To verify**.
+- Two Orchestrators by area running at the same time, as top-level peers messaging each other by id (contract §11): **To verify**. Each one's lanes are its own children, so turn-end notes go only to the Orchestrator that started the lane. **Assumed.**
 
 ## Subagent tokens
 
