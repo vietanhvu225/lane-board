@@ -149,8 +149,8 @@ It exists so a batch of AFK tickets can run while the user is away (overnight, s
 
 **Worker lane loop** (runs on its own, does not wait on the Orchestrator between tickets):
 1. Merge main into the lane branch. Set the title `<effort>-<NN> <short name>` of the ticket in progress.
-2. Start a **doer subagent** (Agent tool, fresh context): prompt = the ticket file + workflow.md §1–§4. It makes the artifacts and writes the Answer and session record.
-3. Start a **checker subagent** (fresh context, given only the ticket file, the diff and workflow.md §5). Its prompt: run `python -I tools/check_ticket.py <ticket> --base main` (plus the project checks for the paths touched); check each point of the ticket's **`Done when`**; **sample 3 artifact files** and read their content. It returns pass / fail with what is missing; the lane writes the result into the session record's `Check:` field. On fail, the doer fixes, at most 2 rounds; still failing stops the queue.
+2. Prepare the worktree for the subagents **before** starting them: install or link the build dependencies they need (a package folder, a virtual env, generated files). These are usually gitignored, so a fresh worktree lacks them (§6), and a subagent without them cannot build. Then start a **doer subagent** (Agent tool, fresh context): prompt = the ticket file + workflow.md §1–§4. It makes the artifacts and writes the Answer and session record.
+3. Start a **checker subagent** (fresh context, given only the ticket file, the diff and workflow.md §5). Its prompt: run `python -I tools/check_ticket.py <ticket> --base main` (plus the project checks for the paths touched); check each point of the ticket's **`Done when`**; **sample 3 artifact files** and read their content; when a conclusion of the ticket rests on images (screenshots, reference images, renders), **look at ≥ 2 of them** and compare them with the claim (workflow.md §5). It returns pass / fail with what is missing; the lane writes the result into the session record's `Check:` field. On fail, the doer fixes, at most 2 rounds; still failing stops the queue.
    **Sequential**: finish checking ticket N before starting ticket N+1 (running them in parallel in one worktree mixed files into the wrong commits).
 4. The **lane** commits (subagents don't commit) with trailers (workflow.md §4) and merges into main (git locks on its own: on a lock, wait and retry). Ticket `resolved`.
 5. Write one line in the shared notes; next ticket.
@@ -188,7 +188,7 @@ Every Orchestrator uses the same contract, orchestrator.md, lane.md and workflow
 
 **Shared:**
 - The **lane ledger** `.scratch/_orchestrator/lanes.md`: every Orchestrator writes its lanes here, so the ledger shows the total. The effort range tells which area a lane belongs to.
-- **Capacity** (§7): the lane cap and the exclusive-resource cap count across all Orchestrators; the HITL cap counts per Orchestrator. Before starting a lane, read the ledger and count the other area's lanes too.
+- **Capacity** (§7): the lane cap and the exclusive-resource cap count across all Orchestrators; the HITL cap counts per Orchestrator. **There is no separate lane cap per area**: a cap written anywhere other than this contract goes unseen, since Orchestrators count by §7 (in the source project one did, and ran over it). Before starting a lane, read the ledger and count the other area's lanes too.
 - **Usage limits** of the account: when planning a batch, each Orchestrator writes the share it means to use in its area's plan.
 
 **Boundaries:**

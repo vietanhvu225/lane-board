@@ -109,7 +109,7 @@ Append at the end of the ticket when done:
 
 ## 4. Commit trailers
 
-Every worker commit carries two trailers, so the Orchestrator can check through `git log`:
+The commit that **closes a ticket** (the one where the ticket becomes `Status: resolved`) must carry two trailers, so the Orchestrator can check through `git log`; work-in-progress commits should carry them too. `check_ticket.py` needs at least one commit of the ticket with both trailers.
 
 ```
 <commit subject>
@@ -144,6 +144,7 @@ For each closed ticket:
 3. Every artifact in the record exists.
 4. A commit carries the ticket's `Ticket:` trailer (except answer-only tickets).
 5. The done criteria have evidence.
+6. A conclusion drawn from images (screenshots, reference images, renders): look at ≥ 2 of the images and compare them with the claim. A checker that only reads the text misses a misread image.
 
 A failing ticket is reopened or gets a fix ticket. Deviations go to the retro.
 

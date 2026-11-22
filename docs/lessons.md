@@ -39,4 +39,8 @@ Each rule below changed because something went wrong (or right) in the project t
 | Real factor on token estimates | Real use ran about 2× the per-ticket estimates | orchestrator.md, claude-desktop.md |
 | Several Orchestrators by area, shared lane ledger | The source project added an art Orchestrator beside the gameplay one; one ledger keeps the lane count right across both, and a shared file needs the other Orchestrator's word before a claim. Not run long yet | contract §7, §11, orchestrator.md |
 | One lane at a time on an exclusive resource | The game client accepted only one console client, and the GPU could not hold the game and an image tool at once | contract §7 |
+| No separate lane cap per area | A per-area cap written outside the contract went unseen; the Orchestrator counted by the contract and ran over it | contract §11 |
+| Checker looks at ≥ 2 images | A lane misread a slowed-down capture; the checker read only the text and passed it | contract §10, workflow §5 |
+| Trailers required on the closing commit | "Every commit" did not match the project's commit hook, which checks only the commit that resolves the ticket | workflow §4 |
+| Prepare worktree dependencies before subagents | A doer subagent could not build: the fresh worktree had no installed packages | contract §10 |
 | Handover with "Open lanes" and ids | The first Orchestrator handover worked end to end: the new Orchestrator checked in with the CTO by id | orchestrator.md, templates/handover.md |

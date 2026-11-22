@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0 (2026-11-22)
+
+From the source project's art-phase retro:
+
+- No separate lane cap per area (contract §11).
+- The checker subagent and the Orchestrator check look at ≥ 2 images when a conclusion rests on images (contract §10, workflow §5 step 6).
+- Trailers are required on the commit that closes a ticket, and recommended on work-in-progress commits (workflow §4).
+- A worker lane prepares the worktree's build dependencies before starting subagents (contract §10).
+
 ## 0.3.0 (2026-11-21)
 
 - Several Orchestrators by area (contract §11, optional): each area has its own title, brief, effort range, folder and id line in the lane ledger; the ledger is shared; a shared file needs the other Orchestrator's word before a claim; no Orchestrator touches another area's efforts.
