@@ -44,4 +44,6 @@ Each rule below changed because something went wrong (or right) in the project t
 | Trailers required on the closing commit | "Every commit" did not match the project's commit hook, which checks only the commit that resolves the ticket | workflow §4 |
 | Prepare worktree dependencies before subagents | A doer subagent could not build: the fresh worktree had no installed packages | contract §10 |
 | Old lanes only finish; new tickets get new lanes | A new Orchestrator gave a new batch to old worker lanes; their notes kept waking the old Orchestrator near a full context, and the new one heard only what lanes sent it | orchestrator.md §Handover, claude-desktop.md |
+| Rebuild gitignored output in the main checkout after merge | Tickets reached main without their compiled assets: gitignored build output does not travel with a merge | contract §6 |
+| Subagent briefs name the temp folder and path style | Subagents wrote to `/tmp` (the Git install under Git Bash), and Windows paths in ordinary strings became control bytes in files | contract §10 |
 | Handover with "Open lanes" and ids | The first Orchestrator handover worked end to end: the new Orchestrator checked in with the CTO by id | orchestrator.md, templates/handover.md |

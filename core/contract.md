@@ -99,6 +99,7 @@ This deliberately differs from the `wayfinder` skill (where the session resolvin
 - **Before merging:** merge the latest main into the lane branch, rerun the checks, then merge into main. The checks depend on which files the lane touched; [workflow.md §5](../agents/workflow.md) lists them by path. At least:
   - every ticket: `python -I tools/check_ticket.py <ticket> --base main`;
   - plus each project check whose path the lane touched (build, test suite, coverage script).
+- **After merging:** build output that is gitignored (compiled files, generated files) does not travel with the merge. If the lane's work needs it in the main checkout, the lane rebuilds it there **right after the merge**, still in its merge turn, before reporting `DONE` (in the source project, tickets reached main without their compiled assets).
 - **One merge at a time.** A lane asks the Orchestrator for a merge turn (tag `WAIT` while waiting).
 - **Merge kinds** (confirm in README §Operating decisions):
   - only docs / tracker paths: the Orchestrator's check passes → it messages the lane "ok to merge" → the lane merges, no GATE;
@@ -149,7 +150,11 @@ It exists so a batch of AFK tickets can run while the user is away (overnight, s
 
 **Worker lane loop** (runs on its own, does not wait on the Orchestrator between tickets):
 1. Merge main into the lane branch. Set the title `<effort>-<NN> <short name>` of the ticket in progress.
-2. Prepare the worktree for the subagents **before** starting them: install or link the build dependencies they need (a package folder, a virtual env, generated files). These are usually gitignored, so a fresh worktree lacks them (§6), and a subagent without them cannot build. Then start a **doer subagent** (Agent tool, fresh context): prompt = the ticket file + workflow.md §1–§4. It makes the artifacts and writes the Answer and session record.
+2. Prepare the worktree for the subagents **before** starting them: install or link the build dependencies they need (a package folder, a virtual env, generated files). These are usually gitignored, so a fresh worktree lacks them (§6), and a subagent without them cannot build. Write into each subagent's brief:
+   - **a temp folder**: the lane's scratchpad (or another folder the project names), never `/tmp`: under Git Bash on Windows, `/tmp` is inside the Git install;
+   - **Windows paths in scripts**: raw strings (`r"C:\…"`) or forward slashes; in an ordinary string, `\4`, `\a` and the like turn into control bytes.
+
+   Then start a **doer subagent** (Agent tool, fresh context): prompt = the ticket file + workflow.md §1–§4. It makes the artifacts and writes the Answer and session record.
 3. Start a **checker subagent** (fresh context, given only the ticket file, the diff and workflow.md §5). Its prompt: run `python -I tools/check_ticket.py <ticket> --base main` (plus the project checks for the paths touched); check each point of the ticket's **`Done when`**; **sample 3 artifact files** and read their content; when a conclusion of the ticket rests on images (screenshots, reference images, renders), **look at ≥ 2 of them** and compare them with the claim (workflow.md §5). It returns pass / fail with what is missing; the lane writes the result into the session record's `Check:` field. On fail, the doer fixes, at most 2 rounds; still failing stops the queue.
    **Sequential**: finish checking ticket N before starting ticket N+1 (running them in parallel in one worktree mixed files into the wrong commits).
 4. The **lane** commits (subagents don't commit) with trailers (workflow.md §4) and merges into main (git locks on its own: on a lock, wait and retry). Ticket `resolved`.
