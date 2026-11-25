@@ -17,7 +17,7 @@ List every lane that is not `DONE` and archived.
 
 ## Open lanes
 
-Lanes started by the previous Orchestrator stay its children. Message them directly by id and tell each your new id. They report to the Orchestrator by id.
+Lanes started by the previous Orchestrator stay its children. Message them directly by id and tell each your new id. They report to the Orchestrator by id. They only finish the work they have; new tickets go to new lanes (orchestrator.md §Handover).
 
 | Title (as in the sidebar) | Session id | State |
 |---|---|---|

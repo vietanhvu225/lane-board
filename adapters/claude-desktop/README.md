@@ -20,7 +20,7 @@ The app changes. When your project sees something different, log a `[general] [O
 - A card the user clicks starts the lane at once. **Observed.** So the Orchestrator claims the ticket on main before proposing the card (contract §5).
 - The app does not enforce capacity: the user can click two pending HITL cards and get two HITL lanes. **Observed.** Hence "one pending HITL card at a time" (contract §7).
 - Branch names: a lane started by `start_session` gets `claude/<slug>-<suffix>`; a lane started from a card gets a random name, and `branch_name` is dropped. **Observed.** Set no branch convention; record the real branch in the lane ledger.
-- A lane can't be moved to a new parent. Lanes that live for days stay under the old Orchestrator; the new one messages them by id. **Assumed.**
+- A lane can't be moved to a new parent. **Observed**: after a handover, old lanes still listed the old Orchestrator as `startedBy`, and their turn-end notes still went to the old session. The new Orchestrator messages old lanes by id only to finish their work; new tickets get new lanes (orchestrator.md §Handover).
 
 ## Auto-mode classifier
 
@@ -61,7 +61,7 @@ The app changes. When your project sees something different, log a `[general] [O
 
 - The CTO and the Orchestrator as two top-level peers, talking by id: works, including a full Orchestrator handover (old one writes the handover with the CTO's id, renames itself `(old) …`; the new one checks in with the CTO by id and gives its own id). **Observed.**
 - Three levels (CTO starts the Orchestrator, which starts lanes as grandchildren): how the app handles it is **To verify**. Avoid it: keep the CTO and the Orchestrator top-level.
-- Old lanes (children of a previous Orchestrator) sending to the new Orchestrator by id, and the old Orchestrator forwarding their turn-end notes: **To verify**.
+- Old lanes' turn-end notes go to the old Orchestrator, not the new one; the new one only gets what old lanes send it by message. **Observed.** Whether the old Orchestrator's forwarding works well over days: **To verify**.
 - Two Orchestrators by area running at the same time, as top-level peers messaging each other by id (contract §11): **To verify**. Each one's lanes are its own children, so turn-end notes go only to the Orchestrator that started the lane. **Assumed.**
 
 ## Subagent tokens

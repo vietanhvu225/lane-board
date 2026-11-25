@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0 (2026-11-25)
+
+- After a handover, old lanes only finish their work in progress; new tickets and new yolo queues go to new lanes the new Orchestrator starts; finished old lanes are archived when the user agrees; the old Orchestrator forwards notes until then (orchestrator.md §Handover, §Yolo mode step 4, handover template).
+- Adapter: "a lane can't move to a new parent" is now Observed; old lanes' turn-end notes go to the old Orchestrator.
+
 ## 0.4.0 (2026-11-22)
 
 From the source project's art-phase retro:

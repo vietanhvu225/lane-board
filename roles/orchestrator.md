@@ -64,7 +64,7 @@ When the user turns on **yolo mode** for a batch of AFK tickets before stepping 
 1. Split the batch into at most 3 queues, none touching another's files.
 2. Show the queues as a table: queue, lane, tickets (in order), ticket count, **token estimate** (sum of per-ticket estimates, multiplied by the **previous phase's real factor**: real tokens / estimate, from its session records; in the source project real use ran about twice the estimate). Wait for the user's yes in their own words.
 3. Claim every queue on main, record them in the lane ledger, commit.
-4. Hand out queues: message running AFK lanes, or start new lanes when the user clicks.
+4. Hand out queues: message running AFK lanes **that you started yourself**, or start new lanes when the user clicks. Lanes of a previous Orchestrator get no new queue (§Handover).
 5. Next morning: recheck as contract §10 "Next morning" says.
 
 ## Talking to the CTO
@@ -97,3 +97,9 @@ When **a phase closes**, or **right after your transcript's first compaction**, 
 4. Afterwards, old lanes' turn-end notes still arrive here: forward them to the new Orchestrator by its id (recorded in the handover once it checks in).
 
 The new Orchestrator writes its id on its area's id line in the lane ledger, then messages old lanes directly by `local_…` id, not through you, and tells each lane its new id: lanes send by id (contract §4).
+
+**Old lanes only finish; new tickets get new lanes.** A lane is the child of the Orchestrator that started it and can't move to a new parent ([claude-desktop.md](claude-desktop.md)). So an old lane's turn-end notes keep waking the old Orchestrator, whose context is already nearly full. (In the source project a new Orchestrator handed a whole new batch to old worker lanes, and every note went to the old session.)
+- The new Orchestrator messages old lanes only so they **finish the ticket in progress** (or the queue claimed before the handover). It gives old lanes **no new ticket or queue**.
+- New tickets and new yolo queues go to **new lanes** the new Orchestrator starts, so they are its children. On a turn started by an automated event, only propose a card for the user to click (§Starting a lane step 1).
+- When an old lane has finished and its branch is in main (no unmerged commits, clean worktree), the new Orchestrator suggests the user archive it, and marks it `DONE · archived` in the lane ledger once the user agrees. Never archive on your own.
+- The old Orchestrator forwards old lanes' notes until they finish or are archived, then stops.

@@ -43,4 +43,5 @@ Each rule below changed because something went wrong (or right) in the project t
 | Checker looks at ≥ 2 images | A lane misread a slowed-down capture; the checker read only the text and passed it | contract §10, workflow §5 |
 | Trailers required on the closing commit | "Every commit" did not match the project's commit hook, which checks only the commit that resolves the ticket | workflow §4 |
 | Prepare worktree dependencies before subagents | A doer subagent could not build: the fresh worktree had no installed packages | contract §10 |
+| Old lanes only finish; new tickets get new lanes | A new Orchestrator gave a new batch to old worker lanes; their notes kept waking the old Orchestrator near a full context, and the new one heard only what lanes sent it | orchestrator.md §Handover, claude-desktop.md |
 | Handover with "Open lanes" and ids | The first Orchestrator handover worked end to end: the new Orchestrator checked in with the CTO by id | orchestrator.md, templates/handover.md |
